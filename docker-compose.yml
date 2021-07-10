@@ -109,7 +109,7 @@ services:
         middleware:
                 container_name: middleware
                 image: getumbrel/middleware:v0.1.10@sha256:ff3d5929a506739286f296c803105cca9d83e73e9eb1b7c6833533e345d77736
-                depends_on: [ manager, bitcoin ]
+                depends_on: [ manager, bitcoin, lnd ]
                 command: ["./wait-for-node-manager.sh", $MANAGER_IP, "npm", "start"]
                 restart: on-failure
                 volumes:
