@@ -16,7 +16,7 @@ services:
                         ipv4_address: $NGINX_IP
         bitcoin:
                 container_name: bitcoin
-                image: lncm/bitcoind:v0.21.1@sha256:5bedb46d698de16c59e9e43d31485d0d82239bd437d62ac7cf47ebb633214f37
+                image: lncm/bitcoind:v22.0@sha256:37a1adb29b3abc9f972f0d981f45e41e5fca2e22816a023faa9fdc0084aa4507
                 depends_on: [ manager, nginx ]
                 volumes:
                         - ${PWD}/bitcoin:/data/.bitcoin
@@ -29,10 +29,13 @@ services:
                         ipv4_address: $BITCOIN_IP
         lnd:
                 container_name: lnd
-                image: lncm/lnd:v0.12.1@sha256:bdc442c00bc4dd4d5bfa42efd7d977bfe4d21a08d466c933b9cff7cfc83e0c0e
+                image: lightninglabs/lnd:v0.13.3-beta@sha256:b8f96d4d7fb9dcd349542240a6bff1ca0170715a16e6d79b0e9188e34ea18471
+                user: 1000:1000
                 depends_on: [ manager ]
                 volumes:
                         - ${PWD}/lnd:/data/.lnd
+                environment:
+                  HOME: /data
                 restart: on-failure
                 stop_grace_period: 5m30s
                 ports:
@@ -44,7 +47,7 @@ services:
                         ipv4_address: $LND_IP
         dashboard:
                 container_name: dashboard
-                image: getumbrel/dashboard:v0.3.22@sha256:144105c0b7b6717f22e18171eec481897bb96344c7c298c681c9c04ce2b764a6
+                image: getumbrel/dashboard:v0.3.27@sha256:acffdd690dd3b6da8cd7910bac970cc1bbab07090869dbd982ae48706fee36ac
                 restart: on-failure
                 stop_grace_period: 1m30s
                 networks:
@@ -52,7 +55,7 @@ services:
                         ipv4_address: $DASHBOARD_IP
         manager:
                 container_name: manager
-                image: getumbrel/manager:v0.2.12@sha256:1d9dc50743b10c7f57f0514a50932e4c99e5a77616ef24ecd1f9826b6085b8fc
+                image: getumbrel/manager:v0.2.14@sha256:331406ac0232285b729404dc28e6bccb89def6c7974baf640b3726dfb9704105
                 depends_on: [ ]
                 restart: on-failure
                 stop_grace_period: 5m30s
@@ -103,12 +106,13 @@ services:
                     TOR_PROXY_IP: "${TOR_PROXY_IP}"
                     TOR_PROXY_PORT: "${TOR_PROXY_PORT}"
                     TOR_HIDDEN_SERVICE_DIR: "/var/lib/tor"
+                    IS_UMBREL_OS: ${IS_UMBREL_OS:-"false"}
                 networks:
                     default:
                         ipv4_address: $MANAGER_IP
         middleware:
                 container_name: middleware
-                image: getumbrel/middleware:v0.1.10@sha256:ff3d5929a506739286f296c803105cca9d83e73e9eb1b7c6833533e345d77736
+                image: getumbrel/middleware:v0.1.12@sha256:2d689fbf9248d638a772f77c85e3fbf92c6bf69134533cbe4b450d80b2319c92
                 depends_on: [ manager, bitcoin, lnd ]
                 command: ["./wait-for-node-manager.sh", $MANAGER_IP, "npm", "start"]
                 restart: on-failure
@@ -146,6 +150,7 @@ services:
                 networks:
                     default:
                         ipv4_address: $NEUTRINO_SWITCHER_IP
+
 networks:
     default:
       name: umbrel_main_network
