@@ -108,7 +108,14 @@ echo
 echo
 echo "Starting Docker services..."
 echo
-docker-compose up --detach --build --remove-orphans || {
+
+DOCKER_COMPOSE_FILE=docker-compose.yml
+if [[ "${EXCLUDE_TOR}" == true ]]; then
+  DOCKER_COMPOSE_FILE=docker-compose-no-tor.yml
+  echo "Excluding Tor and Electrs services..."
+fi
+
+docker-compose up --detach --build --remove-orphans --file $DOCKER_COMPOSE_FILE || {
   echo "Failed to start containers"
   $set_status umbrel errored docker-failed
   exit 1

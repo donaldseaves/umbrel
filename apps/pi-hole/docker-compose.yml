@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   server:
-    image: pihole/pihole:2021.10@sha256:ce9ba6e58a48ed3dbd6d1dbd884cb5dab6c1edb384b7f4b745ad72cca147a07a
+    image: pihole/pihole:2022.01.1@sha256:a02faea91d505d0bfc1583049f3e943f2c3afe03df574e625ffa828b16b85832
     # Pi-hole doesn't currently support running as non-root
     # https://github.com/pi-hole/docker-pi-hole/issues/685
     # user: "1000:1000"
@@ -16,7 +16,7 @@ services:
       - ${APP_DATA_DIR}/data/dnsmasq:/etc/dnsmasq.d/
     environment:
       - VIRTUAL_HOST=${APP_DOMAIN}
-      - WEBPASSWORD=moneyprintergobrrr
+      - WEBPASSWORD=${APP_PASSWORD}
     networks:
       default:
         ipv4_address: $APP_PI_HOLE_IP
