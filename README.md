@@ -57,7 +57,7 @@ sudo ./scripts/start
 # during first run of the start script and will be persisted through
 # any updates
 
-# For testnet, run:
+# To exclude Tor and Electrs, run:
 sudo EXCLUDE_TOR=true ./scripts/start
 
 # For testnet, run:
