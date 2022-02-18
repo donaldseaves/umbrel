@@ -115,7 +115,7 @@ if [[ "${EXCLUDE_TOR}" == true ]]; then
   echo "Excluding Tor and Electrs services..."
 fi
 
-docker compose up --detach --build --remove-orphans --file $DOCKER_COMPOSE_FILE || {
+docker compose --file $DOCKER_COMPOSE_FILE up --detach --build --remove-orphans  || {
   echo "Failed to start containers"
   $set_status umbrel errored docker-failed
   exit 1
