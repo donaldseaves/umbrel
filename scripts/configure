@@ -22,7 +22,7 @@ if [ ! "$(uname -s)" == "Linux" ]; then
   exit 1
 fi
 
-check_dependencies docker docker-compose dirname readlink
+check_dependencies docker dirname readlink
 
 # Switch to Umbrel's root directory
 UMBREL_ROOT="$(readlink -f "$(dirname "${BASH_SOURCE[0]}")"/..)"
@@ -528,7 +528,7 @@ if [[ "${EXCLUDE_TOR}" == false ]]; then
 if [[ ! -f "${STATUS_DIR}/configured" ]]; then
   echo "Generating hidden services..."
   echo
-  docker-compose up --detach tor_proxy
+  docker compose up --detach tor_proxy
   wait_for_tor=10
   while [[ ! -f "${UMBREL_ROOT}/tor/data/web/hostname" ]]; do
     if [[ "${wait_for_tor}" == 0 ]]; then
@@ -539,7 +539,7 @@ if [[ ! -f "${STATUS_DIR}/configured" ]]; then
     sleep 1
     ((wait_for_tor--))
   done
-  docker-compose down
+  docker compose down
 fi
   echo "EXCLUDED TOR"
 fi
