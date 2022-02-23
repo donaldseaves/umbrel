@@ -109,6 +109,7 @@ echo
 echo "Starting Docker services..."
 echo
 
+EXCLUDE_TOR=${EXCLUDE_TOR:-true}
 DOCKER_COMPOSE_FILE=docker-compose.yml
 if [[ "${EXCLUDE_TOR}" == true ]]; then
   DOCKER_COMPOSE_FILE=docker-compose-no-tor.yml
